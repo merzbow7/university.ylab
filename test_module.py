@@ -1,4 +1,4 @@
-from app import main, print_pretty
+from app import make_ways, print_pretty
 
 
 def test_myoutput(capsys):
@@ -9,8 +9,10 @@ def test_myoutput(capsys):
                   "-> (5, 5)[11.528023972905324] " \
                   "-> (7, 2)[15.133575248369313] " \
                   "-> (0, 1)[22.204643060234787] = 22.204643060234787"
-    result = main(test_data)
-    for i in result:
-        print_pretty(i)
+    result = make_ways(test_data, post=(0, 1))
+
+    for way in result:
+        print_pretty(way)
+
     captured = capsys.readouterr()
     assert test_string in captured.out

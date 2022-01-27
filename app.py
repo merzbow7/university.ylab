@@ -1,6 +1,5 @@
 import itertools
-import sys
-from collections.abc import Sequence, Iterable
+from collections.abc import Sequence
 
 PathTuple = tuple[int, int]
 Vector = list[float]
@@ -32,19 +31,10 @@ def print_pretty(path_tuple: Sequence[Sequence[PathTuple], Vector, float]) -> No
 
     print(*pretty_way, sep=" -> ", end=f" = {path_tuple[2]}\n")
 
-def test_myoutput(capsys):  # or use "capfd" for fd-level
-    print("hello")
-    sys.stderr.write("world\n")
-    captured = capsys.readouterr()
-    assert captured.out == "hello\n"
-    assert captured.err == "world\n"
-    print("next")
-    captured = capsys.readouterr()
-    assert captured.out == "next\n"
 
+def make_ways(waypoints: Sequence[PathTuple], post: PathTuple) -> list:
+    """Make all possible ways from points and calc distance"""
 
-def main(waypoints: Iterable[PathTuple]):
-    post = (0, 1)
     all_paths = itertools.permutations(waypoints)
     result_paths = []
 
@@ -55,18 +45,33 @@ def main(waypoints: Iterable[PathTuple]):
     return sorted(result_paths, key=lambda path: path[2])
 
 
-if __name__ == '__main__':
-    points = {(2, 5): "Ул. Грибоедова, 104/25",
-              (5, 2): "Ул. Бейкер стрит, 221б",
-              (6, 6): "Ул. Большая Садовая, 302-бис",
-              (8, 3): "Вечнозелёная Аллея, 742",
-              }
-    test_data = ((1, 4), (4, 1), (5, 5), (7, 2))
+def read_points() -> (Sequence[PathTuple], PathTuple):
+    def read_point(message) -> PathTuple:
+        point = input(message).split()
+        return int(point[0]), int(point[1])
 
-    result = main(test_data)
+    print("Вводите все координаты точек через пробел, например:5 5")
+    post = read_point("Введите координаты почты:")
+    point_count = int(input("Введите количество точек для посещения почтальоном:"))
+    waypoints = tuple(read_point(f"Введите адрес точки {i}:") for i in range(point_count))
+
+    return (waypoints, post)
+
+
+if __name__ == '__main__':
+    # points = {(2, 5): "Ул. Грибоедова, 104/25",
+    #           (5, 2): "Ул. Бейкер стрит, 221б",
+    #           (6, 6): "Ул. Большая Садовая, 302-бис",
+    #           (8, 3): "Вечнозелёная Аллея, 742",
+    #           }
+
+    waypoints, post = read_points()
+    result = make_ways(waypoints, post)
     min_path = result[0][2]
     index = 0
 
     while result[index][2] == min_path:
         print_pretty(result[index])
         index += 1
+
+    print(result)
