@@ -59,19 +59,17 @@ def read_points() -> (Sequence[PathTuple], PathTuple):
 
 
 if __name__ == '__main__':
-    # points = {(2, 5): "Ул. Грибоедова, 104/25",
-    #           (5, 2): "Ул. Бейкер стрит, 221б",
-    #           (6, 6): "Ул. Большая Садовая, 302-бис",
-    #           (8, 3): "Вечнозелёная Аллея, 742",
-    #           }
+    points = {(2, 5): "Ул. Грибоедова, 104/25",
+              (5, 2): "Ул. Бейкер стрит, 221б",
+              (6, 6): "Ул. Большая Садовая, 302-бис",
+              (8, 3): "Вечнозелёная Аллея, 742",
+              }
 
     waypoints, post = read_points()
     result = make_ways(waypoints, post)
     min_path = result[0][2]
     index = 0
 
-    while result[index][2] == min_path:
+    while index < len(result) and result[index][2] == min_path:
         print_pretty(result[index])
         index += 1
-
-    print(result)
